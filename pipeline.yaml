@@ -1,0 +1,37 @@
+auth:
+  cookie_file: "~/.speakerforge/bili_cookies.json"
+  # override: "../Subtitle/cache/bili_cookies.json"
+
+stage1:
+  sample_rate: 24000
+
+stage2:
+  model: htdemucs_ft
+
+stage3:
+  min_duration: 0.8
+  max_duration: 8.0
+  min_silence_duration: 0.3
+
+stage4:
+  model: large-v3
+  language: zh
+  batch_size: 16
+  # use "medium" for CPU-only (no GPU with >=8GB VRAM)
+
+stage5:
+  min_duration: 1.0
+  max_duration: 6.0
+  min_confidence: 0.6
+  min_text_chars: 4
+
+stage6:
+  target_rms_dbfs: -20
+  silence_threshold_dbfs: -40
+
+stage8:
+  base_model: cosyvoice2
+  cosyvoice2_repo: "/path/to/CosyVoice"
+  lora_rank: 16
+  epochs: 10
+  batch_size: 4

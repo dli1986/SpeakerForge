@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "speakerforge"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.0",
+    "pyyaml>=6.0",
+    "tqdm>=4.0",
+]
+
+[project.scripts]
+speakerforge = "speakerforge.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["speakerforge*"]

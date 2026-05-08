@@ -1,0 +1,16 @@
+sources:
+  - speaker: "up_ai_report"
+    platform: bilibili
+    type: video
+    id: "BV1xxxx"
+
+  - speaker: "up_ai_report"
+    platform: bilibili
+    type: collection
+    id: "12345"
+
+  - speaker: "up_voice_clean"
+    platform: bilibili
+    type: user_videos
+    uid: "123456"
+    limit: 10
