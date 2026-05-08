@@ -1,0 +1,9 @@
+pyproject.toml
+speakerforge/__init__.py
+speakerforge/__main__.py
+speakerforge.egg-info/PKG-INFO
+speakerforge.egg-info/SOURCES.txt
+speakerforge.egg-info/dependency_links.txt
+speakerforge.egg-info/entry_points.txt
+speakerforge.egg-info/requires.txt
+speakerforge.egg-info/top_level.txt

@@ -1,6 +1,10 @@
 auth:
   cookie_file: "~/.speakerforge/bili_cookies.json"
-  # override: "../Subtitle/cache/bili_cookies.json"
+  # override: "/path/to/your/bili_cookies.json"
+
+stage0:
+  output_root: "raw_sources"
+  prefer_audio_stream: false
 
 stage1:
   sample_rate: 24000
