@@ -138,24 +138,51 @@ def run_pipeline(speaker, sources, config, stages_range, version):
     src_cfg = load_sources(sources)
     pipe_cfg = load_pipeline(config)
 
-    start, end = (int(x) for x in stages_range.split("-"))
-
-    stage_map = {
-        0: lambda: __import__("speakerforge.stages.stage0_acquire", fromlist=["run"]).run(src_cfg, pipe_cfg, speaker=speaker),
-        1: lambda: __import__("speakerforge.stages.stage1_extract", fromlist=["run"]).run(pipe_cfg, speaker=speaker),
-        2: lambda: __import__("speakerforge.stages.stage2_demucs", fromlist=["run"]).run(pipe_cfg, speaker=speaker),
-        3: lambda: __import__("speakerforge.stages.stage3_vad", fromlist=["run"]).run(pipe_cfg, speaker=speaker),
-        4: lambda: __import__("speakerforge.stages.stage4_align", fromlist=["run"]).run(pipe_cfg, speaker=speaker),
-        5: lambda: __import__("speakerforge.stages.stage5_filter", fromlist=["run"]).run(pipe_cfg, speaker=speaker),
-        6: lambda: __import__("speakerforge.stages.stage6_normalize", fromlist=["run"]).run(pipe_cfg, speaker=speaker),
-        7: lambda: __import__("speakerforge.stages.stage7_package", fromlist=["run"]).run(pipe_cfg, speaker=speaker, version=version),
-        8: lambda: __import__("speakerforge.stages.stage8_finetune", fromlist=["run"]).run(pipe_cfg, speaker=speaker, version=version),
-        9: lambda: __import__("speakerforge.stages.stage9_eval", fromlist=["run"]).run(pipe_cfg, speaker=speaker, version=version),
-    }
+    try:
+        start, end = (int(x) for x in stages_range.split("-"))
+    except ValueError:
+        raise click.BadParameter("must be in the form 'START-END', e.g. '0-7'", param_hint="--stages")
+    if start > end:
+        raise click.BadParameter("start must be <= end", param_hint="--stages")
+    if not (0 <= start <= 9 and 0 <= end <= 9):
+        raise click.BadParameter("stages must be in range 0-9", param_hint="--stages")
 
     for i in range(start, end + 1):
         click.echo(f"\n{'='*50}\nRunning stage {i}...\n{'='*50}")
-        stage_map[i]()
+        _dispatch_stage(i, src_cfg, pipe_cfg, speaker, version)
+
+
+def _dispatch_stage(i, src_cfg, pipe_cfg, speaker, version):
+    if i == 0:
+        from speakerforge.stages.stage0_acquire import run
+        run(src_cfg, pipe_cfg, speaker=speaker)
+    elif i == 1:
+        from speakerforge.stages.stage1_extract import run
+        run(pipe_cfg, speaker=speaker)
+    elif i == 2:
+        from speakerforge.stages.stage2_demucs import run
+        run(pipe_cfg, speaker=speaker)
+    elif i == 3:
+        from speakerforge.stages.stage3_vad import run
+        run(pipe_cfg, speaker=speaker)
+    elif i == 4:
+        from speakerforge.stages.stage4_align import run
+        run(pipe_cfg, speaker=speaker)
+    elif i == 5:
+        from speakerforge.stages.stage5_filter import run
+        run(pipe_cfg, speaker=speaker)
+    elif i == 6:
+        from speakerforge.stages.stage6_normalize import run
+        run(pipe_cfg, speaker=speaker)
+    elif i == 7:
+        from speakerforge.stages.stage7_package import run
+        run(pipe_cfg, speaker=speaker, version=version)
+    elif i == 8:
+        from speakerforge.stages.stage8_finetune import run
+        run(pipe_cfg, speaker=speaker, version=version)
+    elif i == 9:
+        from speakerforge.stages.stage9_eval import run
+        run(pipe_cfg, speaker=speaker, version=version)
 
 
 @cli.command()
