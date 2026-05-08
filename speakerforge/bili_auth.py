@@ -12,13 +12,16 @@ def load_credential(cookie_file: str) -> Optional[Credential]:
     if not path.exists():
         return None
     data = json.loads(path.read_text(encoding="utf-8"))
-    return Credential(
-        sessdata=data["sessdata"],
-        bili_jct=data["bili_jct"],
-        buvid3=data["buvid3"],
-        dedeuserid=data["dedeuserid"],
-        ac_time_value=data["ac_time_value"],
-    )
+    try:
+        return Credential(
+            sessdata=data["sessdata"],
+            bili_jct=data["bili_jct"],
+            buvid3=data["buvid3"],
+            dedeuserid=data["dedeuserid"],
+            ac_time_value=data["ac_time_value"],
+        )
+    except (json.JSONDecodeError, KeyError) as exc:
+        raise ValueError(f"Credential file {cookie_file!r} is malformed: {exc}") from exc
 
 
 def save_credential(cred: Credential, cookie_file: str) -> None:

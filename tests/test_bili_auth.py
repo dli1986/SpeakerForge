@@ -45,9 +45,7 @@ def test_save_credential_writes_json(tmp_path):
     mock_cred.ac_time_value = "a"
     save_credential(mock_cred, str(cookie_file))
     data = json.loads(cookie_file.read_text())
-    assert data["sessdata"] == "s"
-    assert data["bili_jct"] == "j"
-    assert set(data.keys()) == {"sessdata", "bili_jct", "buvid3", "dedeuserid", "ac_time_value"}
+    assert data == {"sessdata": "s", "bili_jct": "j", "buvid3": "b", "dedeuserid": "d", "ac_time_value": "a"}
 
 
 def test_get_or_login_returns_existing(tmp_path):
