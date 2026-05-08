@@ -1,18 +1,16 @@
-from __future__ import annotations
 import yaml
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 
 
 @dataclass
 class BilibiliSource:
     speaker: str
     platform: str
-    type: str  # video | collection | user_videos
-    id: Optional[str] = None
-    uid: Optional[str] = None
-    limit: Optional[int] = None
+    type: str  # video | collection | user_videos  # noqa: A003 (shadows builtin, required by schema)
+    id: str | None = None
+    uid: str | None = None
+    limit: int | None = None
 
 
 @dataclass
@@ -35,13 +33,20 @@ class PipelineConfig:
 
 
 def load_sources(path: str) -> SourcesConfig:
-    data = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
-    sources = [BilibiliSource(**s) for s in data["sources"]]
+    """Load sources.yaml from path. Raises ValueError on malformed entries."""
+    data = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
+    known = set(BilibiliSource.__dataclass_fields__)
+    sources = []
+    for i, s in enumerate(data.get("sources", [])):
+        unknown = set(s) - known
+        if unknown:
+            raise ValueError(f"sources[{i}] has unknown fields: {unknown}")
+        sources.append(BilibiliSource(**s))
     return SourcesConfig(sources=sources)
 
 
 def load_pipeline(path: str) -> PipelineConfig:
-    data = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    """Load pipeline.yaml from path. Unknown top-level keys are silently ignored."""
+    data = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
     known = set(PipelineConfig.__dataclass_fields__)
-    filtered = {k: v for k, v in data.items() if k in known}
-    return PipelineConfig(**filtered)
+    return PipelineConfig(**{k: v for k, v in data.items() if k in known})

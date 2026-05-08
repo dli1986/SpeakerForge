@@ -35,6 +35,25 @@ def test_load_pipeline_defaults(tmp_path):
     result = load_pipeline(str(cfg))
     assert result.auth["cookie_file"] == "~/.speakerforge/bili_cookies.json"
     assert result.stage3["min_duration"] == 0.8
+    assert result.stage0 == {}
+    assert result.stage1 == {}
+
+
+def test_load_pipeline_empty_file(tmp_path):
+    cfg = tmp_path / "pipeline.yaml"
+    cfg.write_text("")
+    result = load_pipeline(str(cfg))
+    assert isinstance(result, PipelineConfig)
+    assert result.auth == {}
+
+
+def test_load_sources_unknown_key_raises(tmp_path):
+    cfg = tmp_path / "sources.yaml"
+    cfg.write_text(yaml.dump({"sources": [
+        {"speaker": "x", "platform": "bilibili", "type": "video", "id": "BV1", "typo_field": "oops"}
+    ]}))
+    with pytest.raises(ValueError, match="unknown fields"):
+        load_sources(str(cfg))
 
 
 def test_bilibili_source_optional_fields():
