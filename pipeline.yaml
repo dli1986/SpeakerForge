@@ -29,6 +29,8 @@ stage6:
   target_rms_dbfs: -20
   silence_threshold_dbfs: -40
 
+stage7: {}  # no hyperparameters; packaging is structural only
+
 stage8:
   base_model: cosyvoice2
   cosyvoice2_repo: "/path/to/CosyVoice"
