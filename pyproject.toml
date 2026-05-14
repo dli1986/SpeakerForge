@@ -17,7 +17,8 @@ dependencies = [
 
 [project.scripts]
 speakerforge = "speakerforge.cli:cli"
+sesame = "sesame.cli:cli"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["speakerforge*"]
+include = ["speakerforge*", "sesame*"]

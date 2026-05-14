@@ -16,7 +16,8 @@ def load_credential(cookie_file: str) -> Optional[Credential]:
         return Credential(
             sessdata=data["sessdata"],
             bili_jct=data["bili_jct"],
-            buvid3=data["buvid3"],
+            buvid3=data.get("buvid3"),
+            buvid4=data.get("buvid4"),
             dedeuserid=data["dedeuserid"],
             ac_time_value=data["ac_time_value"],
         )
@@ -32,6 +33,7 @@ def save_credential(cred: Credential, cookie_file: str) -> None:
         "sessdata": cred.sessdata,
         "bili_jct": cred.bili_jct,
         "buvid3": cred.buvid3,
+        "buvid4": getattr(cred, "buvid4", None),
         "dedeuserid": cred.dedeuserid,
         "ac_time_value": cred.ac_time_value,
     }, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -52,20 +54,20 @@ def get_or_login(cookie_file: str, login_if_missing: bool = True) -> Credential:
 
 def _qr_login(cookie_file: str) -> Credential:
     """Interactive terminal QR-code login. Uses a persistent event loop (bilibili_api requirement)."""
-    from bilibili_api.login_v2 import QrCodeLogin, QrCodeLoginChannel, QrCodeLoginState
+    from bilibili_api.login_v2 import QrCodeLogin, QrCodeLoginChannel, QrCodeLoginEvents
 
     loop = asyncio.new_event_loop()
 
     async def _do_login():
         login = QrCodeLogin(platform=QrCodeLoginChannel.WEB)
-        await login.start()
+        await login.generate_qrcode()
         print(login.get_qrcode_terminal())
         print("Scan the QR code with the Bilibili app, then confirm login.")
         while True:
             state = await login.check_state()
-            if state == QrCodeLoginState.DONE:
+            if state == QrCodeLoginEvents.DONE:
                 return login.get_credential()
-            if state == QrCodeLoginState.TIMEOUT:
+            if state == QrCodeLoginEvents.TIMEOUT:
                 raise RuntimeError("QR code timed out. Run: python -m speakerforge login")
             await asyncio.sleep(2)
 

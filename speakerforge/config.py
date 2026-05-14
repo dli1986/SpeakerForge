@@ -30,6 +30,7 @@ class PipelineConfig:
     stage6: dict = field(default_factory=dict)
     stage7: dict = field(default_factory=dict)
     stage8: dict = field(default_factory=dict)
+    stage9: dict = field(default_factory=dict)
 
 
 def load_sources(path: str) -> SourcesConfig:

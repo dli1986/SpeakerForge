@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Large data directories (raw audio, processed features)
+speakerforge/raw_sources/
+speakerforge/processed/
+speakerforge/cosyvoice_data/
+
+# Model checkpoints (can be 10s of GB)
+speakerforge/models/
+
+# Generated audio evaluation outputs
+speakerforge/eval/
+
+# Dataset wavs (large audio files — keep metadata.csv)
+speakerforge/dataset/*/wavs/
+
+# Sesame Phase 2 runtime directories
+sesame/data/
+sesame/models/
+sesame/eval/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / credentials
+*.env
+.env*
+cookies.json
+bili_cookies.json

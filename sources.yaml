@@ -1,0 +1,137 @@
+sources:
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1Q6RuBEEUu
+
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1rTXFBAERp
+
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1YSiuBqEFE
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV12wo7BPErg
+
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1ZWdVBzEaE
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1G89MBVEJL
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1xKXPBJE3V
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1w94y1g75V
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1ot42137CG
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV161421r7RR
+
+  - speaker: Akinokoe
+    platform: bilibili  
+    type: video
+    id: BV1XA4m1V7rJ
+
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV15Z4y1z7L8
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1pz421Q7bf
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1RsMgzsEMh
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1SgH5ztEsg
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1qM4m1X74W
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV13h4y1U7pq
+  
+  - speaker: Akinokoe
+    platform: bilibili
+    type: video
+    id: BV1Pk4y1D7NU
+  
+  # Added 2026-05-10, excluded to maintain 600+ sample baseline
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1Jdz8YxE2K
+
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1akwGeSEY1
+
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1JVQzBBE1i
+
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1DwSgBvEGK
+
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1GT421m7Uo
+
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1M3411q7h4
+
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1cm4y117bP
+
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1z14y1P7wV
+
+  # - speaker: Akinokoe
+  #   platform: bilibili
+  #   type: video
+  #   id: BV1jc411D7hn
+

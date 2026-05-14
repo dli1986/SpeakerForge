@@ -52,6 +52,9 @@ def _segment_file(wav_path, out_dir, model, get_speech_timestamps, read_audio,
         chunk = full_audio[s:e]
         out_name = f"{wav_path.stem}_{i:04d}.wav"
         sf.write(str(out_dir / out_name), chunk, sr, subtype="PCM_16")
+        tr_path = out_dir.parent / "transcripts" / f"{wav_path.stem}_{i:04d}.json"
+        if tr_path.exists():
+            tr_path.unlink()
 
 
 def merge_segments(segments: list[tuple[float, float]],
@@ -70,4 +73,19 @@ def merge_segments(segments: list[tuple[float, float]],
 
 def filter_segments(segments: list[tuple[float, float]],
                     min_dur: float, max_dur: float) -> list[tuple[float, float]]:
-    return [(s, e) for s, e in segments if min_dur <= (e - s) <= max_dur]
+    result = []
+    for start, end in segments:
+        dur = end - start
+        if dur < min_dur:
+            continue
+        if dur <= max_dur:
+            result.append((start, end))
+        else:
+            # Split long segments into max_dur chunks, drop tail if < min_dur
+            cursor = start
+            while cursor < end:
+                chunk_end = min(cursor + max_dur, end)
+                if chunk_end - cursor >= min_dur:
+                    result.append((cursor, chunk_end))
+                cursor = chunk_end
+    return result

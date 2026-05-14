@@ -29,6 +29,7 @@ def test_load_credential_returns_credential(tmp_path):
             sessdata="sess123",
             bili_jct="jct456",
             buvid3="buv789",
+            buvid4=None,
             dedeuserid="uid000",
             ac_time_value="act111",
         )
@@ -41,11 +42,12 @@ def test_save_credential_writes_json(tmp_path):
     mock_cred.sessdata = "s"
     mock_cred.bili_jct = "j"
     mock_cred.buvid3 = "b"
+    mock_cred.buvid4 = None
     mock_cred.dedeuserid = "d"
     mock_cred.ac_time_value = "a"
     save_credential(mock_cred, str(cookie_file))
     data = json.loads(cookie_file.read_text())
-    assert data == {"sessdata": "s", "bili_jct": "j", "buvid3": "b", "dedeuserid": "d", "ac_time_value": "a"}
+    assert data == {"sessdata": "s", "bili_jct": "j", "buvid3": "b", "buvid4": None, "dedeuserid": "d", "ac_time_value": "a"}
 
 
 def test_get_or_login_returns_existing(tmp_path):
@@ -67,5 +69,6 @@ def test_save_credential_creates_parent_dirs(tmp_path):
     cookie_file = tmp_path / "deep" / "nested" / "creds.json"
     mock_cred = MagicMock()
     mock_cred.sessdata = mock_cred.bili_jct = mock_cred.buvid3 = mock_cred.dedeuserid = mock_cred.ac_time_value = "x"
+    mock_cred.buvid4 = None
     save_credential(mock_cred, str(cookie_file))
     assert cookie_file.exists()

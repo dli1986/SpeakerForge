@@ -110,12 +110,37 @@ async def _resolve_user_videos(uid: str, limit: int, cred) -> list[str]:
     return bv_ids[:limit]
 
 
+def _json_to_netscape_cookies(json_path: str) -> str:
+    """Convert bili_cookies.json to Netscape format required by yt-dlp.
+    Writes a .txt file alongside the JSON and returns its path."""
+    src = Path(json_path).expanduser()
+    dst = src.with_suffix(".txt")
+    data = json.loads(src.read_text(encoding="utf-8"))
+    far_future = 9999999999
+    lines = ["# Netscape HTTP Cookie File"]
+    cookie_map = {
+        "SESSDATA":   (data.get("sessdata", ""), True),
+        "bili_jct":   (data.get("bili_jct", ""), False),
+        "DedeUserID": (data.get("dedeuserid", ""), False),
+        "buvid3":     (data.get("buvid3") or "", False),
+        "buvid4":     (data.get("buvid4") or "", False),
+        "ac_time_value": (data.get("ac_time_value", ""), False),
+    }
+    for name, (value, secure) in cookie_map.items():
+        if not value:
+            continue
+        secure_str = "TRUE" if secure else "FALSE"
+        lines.append(f".bilibili.com\tTRUE\t/\t{secure_str}\t{far_future}\t{name}\t{value}")
+    dst.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return str(dst)
+
+
 def _download(bv_id: str, out_dir: Path, cookie_file: str) -> None:
     out_path = out_dir / f"{bv_id}.mp4"
     if out_path.exists():
         print(f"  Skip (exists): {bv_id}")
         return
-    cookie_path = str(Path(cookie_file).expanduser())
+    cookie_path = _json_to_netscape_cookies(cookie_file)
     url = f"https://www.bilibili.com/video/{bv_id}/"
     cmd = [
         "yt-dlp",

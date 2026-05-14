@@ -25,9 +25,10 @@ stage4:
 
 stage5:
   min_duration: 1.0
-  max_duration: 6.0
-  min_confidence: 0.6
-  min_text_chars: 4
+  max_duration: 9.0
+  min_confidence: 0.8 # 转录置信度，反映发音清晰度
+  min_text_chars: 4 # 防止空白或极短文本
+  min_snr_db: 8.0 # 信噪比，反映背景噪音水平，单位为分贝（dB），数值越高表示语音信号相对于背景噪音更清晰
 
 stage6:
   target_rms_dbfs: -20
@@ -37,7 +38,22 @@ stage7: {}  # no hyperparameters; packaging is structural only
 
 stage8:
   base_model: cosyvoice2
-  cosyvoice2_repo: "/path/to/CosyVoice"
-  lora_rank: 16
-  epochs: 10
-  batch_size: 4
+  cosyvoice2_repo: "/home/dli/CosyVoice"
+  cosyvoice_env: "/home/dli/cosyvoice_env"
+  wsl_user: "dli"
+  wsl_distro: "Ubuntu"
+  pretrained_model_dir: "pretrained_models/CosyVoice2-0.5B"  # relative to cosyvoice2_repo
+  epochs: 10  # maps to max_epoch in cosyvoice2.yaml
+
+stage9:
+  checkpoint: "epoch_9_whole.pt"  # leave empty to use latest
+  ref_wav: "processed/Akinokoe/segments/BV1YSiuBqEFE_0000.wav"  # leave empty to use first dataset wav
+  test_texts:
+    - "金融 生命科学等领域可以进入业务工作流的核心基础能力"
+    - "自愿开销"
+    - "具备可以交付的质量"
+    - "公司去年营收达到1.1亿美元"
+    - "Transfer Super的十分之一而玉田充吞吐量则是后者的2.2倍"
+    - "有时候刷完这些内容，其实不会立刻有很强的结论，反而是那种很轻微的触动，会在生活里慢慢发酵。比如在走路的时候，或者在做一些很普通的事情时，突然想到刚刚看到的某一句话，然后才意识到，好像自己对一些事情的看法已经悄悄发生了变化。"
+    - "今日はとてもいい天気ですね。ちょっと外を歩くだけでも気持ちが軽くなる気がします。"
+    - "こういう話を聞くと、自分はこれから何を大切にしたいのか、少し考えたくなります。"

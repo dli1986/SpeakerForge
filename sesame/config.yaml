@@ -1,0 +1,34 @@
+dataset:
+  root: "../speakerforge/dataset"  # path to stage7 output (relative to sesame/)
+  speaker: "Akinokoe"
+  version: "B"
+
+model:
+  name: "unsloth/csm-1b"
+  load_in_4bit: false      # must be false for audio quality
+  max_seq_length: 2048
+
+lora:
+  r: 32
+  alpha: 32
+  dropout: 0.0
+  target_modules: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+
+training:
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 4
+  warmup_steps: 5
+  max_steps: 60          # 官方默认；增加样本覆盖可调至 120-200
+  learning_rate: 2.0e-4
+  output_dir: "models/Akinokoe"
+
+eval:
+  n_ref_wavs: 20
+  test_texts:
+    - "金融 生命科学等领域可以进入业务工作流的核心基础能力"
+    - "具备可以交付的质量"
+    - "公司去年营收达到1.1亿美元"
+    - "有时候刷完这些内容，其实不会立刻有很强的结论"
+    - "今日はとてもいい天気ですね。ちょっと外を歩くだけでも気持ちが軽くなる気がします。"
+    - "Transfer Super的十分之一而玉田充吞吐量则是后者的2.2倍"
+    - "自愿开销"

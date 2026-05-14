@@ -45,6 +45,8 @@ def _separate(model, input_wav: Path, output_wav: Path) -> None:
         audio = audio[np.newaxis, :]
     else:
         audio = audio.T
+    if audio.shape[0] == 1:
+        audio = np.repeat(audio, 2, axis=0)  # mono → stereo; Demucs requires 2 channels
 
     wav_tensor = torch.from_numpy(audio).unsqueeze(0)  # (1, C, T)
 
@@ -53,8 +55,10 @@ def _separate(model, input_wav: Path, output_wav: Path) -> None:
         wav_tensor = torchaudio.functional.resample(wav_tensor, sr, model_sr)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"  [stage2] device={device}, torch={torch.__version__}")
     with torch.no_grad():
-        sources = apply_model(model, wav_tensor.to(device), device=device)
+        sources = apply_model(model, wav_tensor.to(device), device=device,
+                              num_workers=0, progress=True)
 
     stem_names = list(model.sources)
     vocals_idx = stem_names.index("vocals")

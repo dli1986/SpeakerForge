@@ -33,6 +33,7 @@ def run(pipeline_cfg: PipelineConfig, speaker: str, version: str = "B") -> None:
     wavs_dir.mkdir(parents=True, exist_ok=True)
 
     rows = []
+    expected_stems = set()
     for entry in tqdm(entries, desc="Stage 7: Packaging"):
         wav_name: str = entry["wav"]
         src_wav: Path
@@ -43,8 +44,8 @@ def run(pipeline_cfg: PipelineConfig, speaker: str, version: str = "B") -> None:
             src_wav = proc_dir / speaker / "audio" / wav_name
 
         dst_wav = wavs_dir / wav_name
-        if not dst_wav.exists():
-            shutil.copy2(str(src_wav), str(dst_wav))
+        shutil.copy2(str(src_wav), str(dst_wav))
+        expected_stems.add(wav_name)
 
         stem = Path(wav_name).stem
         rows.append(
@@ -54,6 +55,11 @@ def run(pipeline_cfg: PipelineConfig, speaker: str, version: str = "B") -> None:
                 "duration": round(float(entry["duration"]), 3),
             }
         )
+
+    # Remove stale wavs no longer in filtered.json
+    for stale in wavs_dir.glob("*.wav"):
+        if stale.name not in expected_stems:
+            stale.unlink()
 
     df = pd.DataFrame(rows, columns=["filename", "text", "duration"])
     df.to_csv(out_dir / "metadata.csv", index=False, encoding="utf-8-sig")

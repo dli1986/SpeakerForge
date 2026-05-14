@@ -31,16 +31,18 @@ def run(pipeline_cfg: PipelineConfig, speaker: str) -> None:
     out_dir = speaker_dir / "normalized"
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # Remove stale normalized files no longer in filtered.json
+    expected = {e["wav"] for e in entries}
+    for stale in out_dir.glob("*.wav"):
+        if stale.name not in expected:
+            stale.unlink()
+
     seg_dir = speaker_dir / "segments"
 
     for entry in tqdm(entries, desc="Stage 6: Normalization"):
         wav_name: str = entry["wav"]
         src = seg_dir / wav_name
         dst = out_dir / wav_name
-
-        if dst.exists():
-            print(f"  Skip (exists): {wav_name}")
-            continue
 
         try:
             _normalize_wav(src, dst, target_rms_db, trim_silence_db)
